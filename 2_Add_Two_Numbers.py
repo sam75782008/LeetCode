@@ -1,4 +1,3 @@
-from collections import deque
 # Definition for singly-linked list.
 # class ListNode(object):
 #     def __init__(self, x):
@@ -12,37 +11,37 @@ class Solution(object):
         :type l2: ListNode
         :rtype: ListNode
         """
-        self.l1_list=deque()
-        self.l2_list=deque()
-        self.helper1(l1)
-        self.helper2(l2)
+        if not l1 and l2:
+            return ""
         
-        number1 = int("".join(list(self.l1_list)))
-        number2 = int("".join(list(self.l2_list)))
-        result = number1+number2
-        res = [int(x) for x in str(result)] 
+        l1_pool = []
+        temp_1 = l1
+        l2_pool = []
+        temp_2 = l2
         
+        while temp_1:
+            node = temp_1.val
+            l1_pool.append(int(node))
+            temp_1 = temp_1.next
+
+        while temp_2:
+            node = temp_2.val
+            l2_pool.append(int(node))
+            temp_2 = temp_2.next        
+        a = 0
+        b = 0
+        for i in range(len(l1_pool)):
+            a += 10**(i)*l1_pool[i]
+        for j in range(len(l2_pool)):
+            b += 10**(j)*l2_pool[j]
+        target = list(str(a+b))[::-1]
         dummy = ListNode(0)
-        output = ListNode(int(res.pop()))
-        dummy.next = output
-        while res:
-            temp = ListNode(int(res.pop()))
-            output.next = temp
-            output = output.next
+        tail = dummy
+        for i in range(len(target)):
+            tail.next = ListNode(int(target[i]))
+            tail = tail.next
         
-        return dummy.next 
-
-    
-    def helper1(self,curr1):
-        if not curr1:
-            return
-        self.l1_list.appendleft(str(curr1.val))
-        self.helper1(curr1.next)
-        return
-
-    def helper2(self,curr2):
-        if not curr2:
-            return
-        self.l2_list.appendleft(str(curr2.val))
-        self.helper2(curr2.next)
-        return
+        return dummy.next
+        
+            
+        
